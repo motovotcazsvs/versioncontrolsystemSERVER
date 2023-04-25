@@ -25,21 +25,40 @@
 //#define numstr_savefilesettings_log_active 68
 
 
-tcpipastm::tcpipastm(QObject *parent) : QObject(parent)
+tcpipastm::tcpipastm()
 {
+    if(this->listen(QHostAddress::Any, 44)){
+        qDebug() << "start server";
+    }
+    else qDebug() << "error";
+
+
 //    timer_tcpip = new QTimer;
 //    stateProtocolTcpIp = NEUTRAL;
-    socket = new QTcpSocket(this);
 //    arr_receivedData.clear();
 //    arr_dataToSend.clear();
 //    frame_number = 1;
 //    nak_count = 0;
 //    add_frame_transmitting = false;
 
-    QObject::connect(socket, &QTcpSocket::readyRead, this, &tcpipastm::slotReadyRead);
     //QObject::connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);
 //    QObject::connect(timer_tcpip, &QTimer::timeout, this, &tcpipastm::timeOutTimerTcpip);
 //    QObject::connect(this, &tcpipastm::signalState, this, &tcpipastm::stateASTM);
+
+
+}
+
+//підключення клієнта
+void tcpipastm::incomingConnection(qintptr socketDescriptor)
+{
+    socket = new QTcpSocket;
+    socket->setSocketDescriptor(socketDescriptor);
+
+    connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);
+    QObject::connect(socket, &QTcpSocket::readyRead, this, &tcpipastm::slotReadyRead);
+
+    Sockets.push_back(socket);
+    qDebug() << "client connected" << socketDescriptor;
 
 
 }
@@ -161,9 +180,13 @@ void tcpipastm::slotReadyRead()
 {
     //qDebug() << "slotReadyRead()";
     QByteArray current_received;
-    current_received.clear();
     current_received = socket->readAll();
-
+    qDebug() << "slotReadyRead()" << current_received;
+    if(current_received == "03010`15`"){
+        //отправляем клиенту 100 элементов
+        QByteArray byte("repositories");
+        writeFrame(byte);
+    }
 //    for(int i = 0; i < current_received.length(); i++){
 //        if(current_received[i] == ENQ || current_received[i] == ACK || current_received[i] == EOT || current_received[i] == NAK || current_received[i] == STX){
 //            if(arr_receivedData[0] == EOT && current_received[i] == ENQ){

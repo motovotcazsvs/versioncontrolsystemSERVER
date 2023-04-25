@@ -2,16 +2,17 @@
 #define TCPIPASTM_H
 
 #include <QObject>
+#include <QTcpServer>
 #include <QTcpSocket>
 //#include <QTimer>
 //#include <QByteArray>
 
 
-class tcpipastm : public QObject
+class tcpipastm : public QTcpServer
 {
     Q_OBJECT
 public:
-    explicit tcpipastm(QObject *parent = 0);
+    explicit tcpipastm();
 //    void sendToServer(QString &);
 //    void highASTM(QString &, QString, QString, QString, QString, QString, int, QString, int);
 //    void connectToServer();
@@ -22,6 +23,7 @@ signals:
 //    void signalState();
 
 public slots:
+    void incomingConnection(qintptr socketDescriptor);
 
 private slots:
 //   void stateASTM();
@@ -39,6 +41,7 @@ private:
 
 private:
     QTcpSocket *socket;
+    QVector <QTcpSocket*> Sockets;
 //    enum statesProtocolTcpIp{
 //        NEUTRAL,
 //        ESTABLISHMENT,

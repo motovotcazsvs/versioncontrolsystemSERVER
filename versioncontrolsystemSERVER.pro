@@ -10,7 +10,9 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    tcpipastm.cpp
+    tcpipastm.cpp \
+    database.cpp
 
 HEADERS += \
-    tcpipastm.h
+    tcpipastm.h \
+    database.h
