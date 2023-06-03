@@ -11,8 +11,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     tcpipastm.cpp \
-    database.cpp
+    database.cpp \
+    control.cpp \
+    actions.cpp
 
 HEADERS += \
     tcpipastm.h \
-    database.h
+    database.h \
+    control.h \
+    actions.h

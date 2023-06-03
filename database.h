@@ -13,7 +13,8 @@ public:
     ~DataBase();
     void connectToDataBase();
     void pushRecord(const QStringList &);
-    void pullRecord(QStringList &);
+    void pullRecord(QStringList &, QString, QString);
+    void pullRecordDOWN(QStringList &, QString, QString);
     //void dataSearch();
     //void controlNextPrevious();
     void closeDataBase();

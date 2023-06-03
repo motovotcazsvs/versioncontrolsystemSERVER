@@ -72,40 +72,33 @@ bool DataBase::createTable()
     return false;
 }
 
-void DataBase::pullRecord(QStringList &record)
+void DataBase::pullRecord(QStringList &records, QString enter, QString step)
 {
     QString str_query;
     str_query.append("SELECT * FROM ");
     str_query.append(TABLE_NAME);
-    str_query.append(" ORDER BY id DESC LIMIT 10");
-/*
-    maximum_count_string = 0;
+    str_query.append(" ORDER BY id ASC LIMIT " + enter + ", " + step);
     QSqlQuery query(db);
     query.setForwardOnly(true); //для ускорения
-    //query.exec("SELECT id, "TABLE_DATE_Y", "TABLE_DATE_M", "TABLE_DATE_D", "TABLE_TIME_H", "TABLE_TIME_M", "TABLE_NUMBERPATIENT", "TABLE_BARCODE", "TABLE_GL", "TABLE_LC", "TABLE_TYPEMEASUREMENT" FROM "TABLE_NAME"");
-    //query.exec("SELECT * FROM "TABLE_NAME" ORDER BY id ASC LIMIT 0, 10");
-    //query.exec("SELECT * FROM "TABLE_NAME" WHERE "TABLE_BARCODE" IS NULL");
     query.exec(str_query);
     while(query.next()){
-        arr_id[maximum_count_string] = query.value(0).toString();
-        arr_date_y[maximum_count_string] = query.value(1).toString();
-        arr_date_m[maximum_count_string] = query.value(2).toString();
-        arr_date_d[maximum_count_string] = query.value(3).toString();
-        arr_time_h[maximum_count_string] = query.value(4).toString();
-        arr_time_m[maximum_count_string] = query.value(5).toString();
-        arr_patient[maximum_count_string] = query.value(6).toString();
-        arr_barcode[maximum_count_string] = query.value(7).toString();
-        arr_gl[maximum_count_string] = query.value(8).toString();
-        arr_lc[maximum_count_string] = query.value(9).toString();
-        arr_typemeasurement[maximum_count_string] = query.value(10).toString();
-
-        qDebug() << "setArr()" << arr_id[maximum_count_string] << arr_date_y[maximum_count_string] << arr_date_m[maximum_count_string] << arr_date_d[maximum_count_string] << arr_time_h[maximum_count_string]
-                 << arr_time_m[maximum_count_string] << arr_patient[maximum_count_string] << arr_barcode[maximum_count_string] << arr_gl[maximum_count_string] << arr_lc[maximum_count_string] << arr_typemeasurement[maximum_count_string];
-
-        if(maximum_count_string == count_array - 1) break;
-        maximum_count_string++;
+        records.append(query.value(1).toString());
     }
-    */
+
+}
+
+void DataBase::pullRecordDOWN(QStringList &records, QString enter, QString step)
+{
+    QString str_query;
+    str_query.append("SELECT * FROM ");
+    str_query.append(TABLE_NAME);
+    str_query.append(" ORDER BY id DESC LIMIT " + enter + ", " + step);
+    QSqlQuery query(db);
+    query.setForwardOnly(true); //для ускорения
+    query.exec(str_query);
+    while(query.next()){
+        records.append(query.value(1).toString());
+    }
 }
 
 void DataBase::pushRecord(const QStringList &record)
@@ -123,7 +116,7 @@ void DataBase::test1()
     QStringList l;
     for(int i = 0; i < 50; i++){
         QString str("repository");
-        str += QString::number(i);
+        str += QString::number(i + 1);
         l.append(str);
         //pushRecord(l);
         l.clear();

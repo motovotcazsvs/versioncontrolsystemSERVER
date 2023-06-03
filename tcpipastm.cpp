@@ -48,6 +48,11 @@ tcpipastm::tcpipastm()
 
 }
 
+QString tcpipastm::getDataReceived()
+{
+    return data_received;
+}
+
 //підключення клієнта
 void tcpipastm::incomingConnection(qintptr socketDescriptor)
 {
@@ -181,11 +186,16 @@ void tcpipastm::slotReadyRead()
     //qDebug() << "slotReadyRead()";
     QByteArray current_received;
     current_received = socket->readAll();
+    data_received = current_received;
     qDebug() << "slotReadyRead()" << current_received;
-    if(current_received == "03010`15`"){
-        //отправляем клиенту 100 элементов
-        QByteArray byte("repositories");
-        writeFrame(byte);
+    if(current_received.contains("0301") || current_received.contains("0307")){
+        emit requestGetRepositories();
+    }
+    else if(current_received.contains("0303")){
+        emit requestGetRepositoriesUP();
+    }
+    else if(current_received.contains("0305")){
+        emit requestGetRepositoriesDOWN();
     }
 //    for(int i = 0; i < current_received.length(); i++){
 //        if(current_received[i] == ENQ || current_received[i] == ACK || current_received[i] == EOT || current_received[i] == NAK || current_received[i] == STX){
@@ -333,7 +343,6 @@ void tcpipastm::slotReadyRead()
 void tcpipastm::writeFrame(const QByteArray &arr_writeFrame)
 {
     QByteArray send_data;
-    send_data.clear();
     QDataStream out_tcp(&send_data, QIODevice::WriteOnly);
     out_tcp.setVersion(QDataStream::Qt_5_7);
     foreach (quint8 byte, arr_writeFrame) {

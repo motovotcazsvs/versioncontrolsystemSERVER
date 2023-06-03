@@ -17,10 +17,15 @@ public:
 //    void highASTM(QString &, QString, QString, QString, QString, QString, int, QString, int);
 //    void connectToServer();
 //    void disconnectToServer();
+    QString getDataReceived();
+    void writeFrame(const QByteArray &);
 
 
 signals:
 //    void signalState();
+    void requestGetRepositories();
+    void requestGetRepositoriesUP();
+    void requestGetRepositoriesDOWN();
 
 public slots:
     void incomingConnection(qintptr socketDescriptor);
@@ -33,7 +38,7 @@ private slots:
 private:
 //    bool checkComand(quint8);
 //    void transmittingFrame();
-    void writeFrame(const QByteArray &);
+//    void writeFrame(const QByteArray &);
 //    quint8 createCheckSum(const QByteArray &);
     void writeComand(quint8);
 //    void changeToNeutralTransmit();
@@ -42,6 +47,7 @@ private:
 private:
     QTcpSocket *socket;
     QVector <QTcpSocket*> Sockets;
+    QString data_received;
 //    enum statesProtocolTcpIp{
 //        NEUTRAL,
 //        ESTABLISHMENT,

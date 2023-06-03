@@ -1,15 +1,12 @@
 #include <QCoreApplication>
-#include "tcpipastm.h"
-#include "database.h"
+
+#include "control.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    tcpipastm obj_startserver;
-    DataBase database;
-    database.connectToDataBase();
-    database.test1();
+    Control obj_startcontrol;
 
     return a.exec();
 }
